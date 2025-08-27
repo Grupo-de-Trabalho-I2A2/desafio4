@@ -1,0 +1,46 @@
+# Global
+.env
+*.log
+.DS_Store
+*.swp
+*.swo
+*.tmp
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# VSCode & IDEs
+.vscode/
+.idea/
+*.code-workspace
+
+# Node.js (agente/)
+agente/node_modules/
+agente/dist/
+agente/build/
+agente/*.log
+
+# Python (agente-api/)
+agente-api/__pycache__/
+agente-api/*.py[cod]
+agente-api/.pytest_cache/
+agente-api/.venv/
+agente-api/env/
+agente-api/venv/
+agente-api/.mypy_cache/
+agente-api/.ruff_cache/
+agente-api/*.db
+
+# Pipenv/PDM/Poetry
+agente-api/Pipfile.lock
+agente-api/poetry.lock
+agente-api/pdm.lock
+
+# SQLite (caso use)
+*.sqlite3
+
+# OS-specific
+Thumbs.db
+ehthumbs.db

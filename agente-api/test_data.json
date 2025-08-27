@@ -1,0 +1,35 @@
+{
+  "competencia": "2025-04",
+  "sindicatos": [
+    {
+      "sindicato": "Sindicato A",
+      "estado": "SP",
+      "dias_uteis": 22,
+      "valor_unitario": 25.5,
+      "empregados": 120,
+      "aprendizes": 15,
+      "estagiarios": 10,
+      "exterior": 2
+    },
+    {
+      "sindicato": "Sindicato B",
+      "estado": "RJ",
+      "dias_uteis": 21,
+      "valor_unitario": 24.75,
+      "empregados": 85,
+      "aprendizes": 8,
+      "estagiarios": 6,
+      "exterior": 0
+    },
+    {
+      "sindicato": "Sindicato C",
+      "estado": "MG",
+      "dias_uteis": 20,
+      "valor_unitario": 23.0,
+      "empregados": 98,
+      "aprendizes": 12,
+      "estagiarios": 5,
+      "exterior": 1
+    }
+  ]
+}

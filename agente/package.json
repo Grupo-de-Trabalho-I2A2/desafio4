@@ -1,0 +1,24 @@
+{
+  "name": "vr-beneficios-etl",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "etl:ativos": "ts-node src/etl/ativos.etl.ts",
+    "etl:all": "ts-node src/etl/run-all.etl.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "mysql2": "^3.11.3",
+    "node-fetch": "^3.3.2",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.20",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}
