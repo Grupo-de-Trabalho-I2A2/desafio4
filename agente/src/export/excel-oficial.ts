@@ -1,11 +1,3 @@
-// arquivo: src/export/excel-oficial.ts
-/**
- * Geração do Excel oficial:
- * - Lê tabela resultado_vr
- * - Exporta planilha final no formato esperado pelo fornecedor
- * - Cálculo de custo empresa (80%) e desconto colaborador (20%)
- */
-
 import 'reflect-metadata';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -14,7 +6,6 @@ import * as XLSX from 'xlsx';
 import { getDataSource } from '../db/get-data-source';
 import { ResultadoVR } from '../db/entities/resultado-vr';
 import { Colaborador } from '../db/entities/colaborador';
-import { Aprendiz } from '../db/entities/aprendiz';
 
 dotenv.config();
 
@@ -32,35 +23,21 @@ export async function runExcelOficial() {
 
   const repoRes = ds.getRepository(ResultadoVR);
   const repoColab = ds.getRepository(Colaborador);
-  const repoApr = ds.getRepository(Aprendiz);
 
-  // Buscar todos os resultados
   const resultados = await repoRes.find({ where: { competencia } });
+  const colaboradores = await repoColab.find();
+
+  // Cria mapa de matrícula → colaborador
+  const colabMap = new Map(colaboradores.map(c => [c.matricula, c]));
 
   // Montar linhas do Excel
   const rows: any[] = [];
   for (const r of resultados) {
-    // Buscar dados extras de colaborador/aprendiz
-    let nome = '';
-    let cargo = '';
-    let empresa = '';
-    let tipo = 'colaborador';
-
-    const col = await repoColab.findOne({ where: { matricula: r.matricula } });
-    if (col) {
-      nome = col.matricula; // se não tiver nome, usamos matricula
-      cargo = col.cargo ?? '';
-      empresa = col.empresa ?? '';
-      tipo = 'colaborador';
-    } else {
-      const apr = await repoApr.findOne({ where: { matricula: r.matricula } });
-      if (apr) {
-        nome = apr.matricula;
-        cargo = apr.cargo ?? '';
-        empresa = apr.empresa ?? '';
-        tipo = 'aprendiz';
-      }
-    }
+    const col = colabMap.get(r.matricula);
+    const nome = col?.matricula ?? '';
+    const cargo = col?.cargo ?? '';
+    const empresa = col?.empresa ?? '';
+    const tipo = r.justificativas?.origem ?? 'colaborador';
 
     rows.push({
       'Matrícula': r.matricula,
@@ -84,14 +61,15 @@ export async function runExcelOficial() {
   }
 
   // Gerar planilha
-  const ws = XLSX.utils.json_to_sheet(rows); // sem { origin }, para evitar erro TS
+  const ws = XLSX.utils.json_to_sheet(rows);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'VR Mensal');
 
-  // Nome do arquivo
   const outDir = path.resolve(process.cwd(), 'out');
   if (!fs.existsSync(outDir)) fs.mkdirSync(outDir);
-  const outFile = path.join(outDir, `VR-Mensal-${competencia}.xlsx`);
+  const [ano, mes] = competencia.split('-');
+  const competenciaFormatada = `${mes}.${ano}`;
+  const outFile = path.join(outDir, `VR MENSAL ${competenciaFormatada} vfinal.xlsx`);
 
   XLSX.writeFile(wb, outFile);
 
